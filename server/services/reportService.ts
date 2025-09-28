@@ -170,30 +170,28 @@ Use proper markdown formatting. Be concise but thorough.`;
  */
 const callLLM = async (prompt: string): Promise<string> => {
   try {
+    // Use the correct model name for the current Gemini API
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-pro",
-      generationConfig: {
-        temperature: 0.7,
-        topK: 40,
-        topP: 0.95,
-        maxOutputTokens: 1024,
-      },
+      model: "gemini-1.5-flash", // Updated model name
     });
 
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: {
-        temperature: 0.7,
-        topK: 40,
-        topP: 0.95,
-        maxOutputTokens: 1024,
-      },
-    });
-
+    const result = await model.generateContent(prompt);
     const response = await result.response;
     return response.text();
   } catch (error) {
     console.error('Error calling LLM:', error);
+    
+    // More detailed error handling
+    if (error instanceof Error) {
+      if (error.message.includes('API_KEY')) {
+        throw new Error('Invalid or missing Gemini API key. Please check your GEMINI_API_KEY in .env file');
+      } else if (error.message.includes('quota') || error.message.includes('rate limit')) {
+        throw new Error('Gemini API rate limit exceeded. Please try again later');
+      } else if (error.message.includes('model')) {
+        throw new Error('Gemini model error. The model may be temporarily unavailable');
+      }
+    }
+    
     throw new Error('Failed to generate LLM response');
   }
 };
