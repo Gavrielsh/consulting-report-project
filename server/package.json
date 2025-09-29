@@ -9,12 +9,8 @@
     "start": "node dist/server.js"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "dotenv": "^16.6.1",
-=======
     "@google/generative-ai": "^0.21.0",
     "dotenv": "^16.4.5",
->>>>>>> 57aa03550c94b3a30a5faefca6387c7f960f1431
     "express": "^4.21.2",
     "path": "^0.12.7",
     "pg": "^8.12.0",

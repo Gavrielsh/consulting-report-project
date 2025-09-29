@@ -125,7 +125,8 @@ const createLLMPrompt = (
     : '- No recent news available';
 
   if (reportType === 'high-level') {
-    return `You are an investment analyst. Based on the following data, provide a SHORT investment recommendation for ${companyName} in 1-2 sentences.
+    // דוח קצר - בדיוק כמו בתמונה הראשונה
+    return `You are an investment analyst. Generate a brief investment report for ${companyName}.
 
 Financial Data (${financials.source.toUpperCase()}):
 - Sales: $${financials.sales.toLocaleString()}
@@ -135,9 +136,18 @@ Financial Data (${financials.source.toUpperCase()}):
 Recent News:
 ${newsSection}
 
-Provide ONLY a brief recommendation ending with one of: "Invest", "Don't Invest", or "Defer".
-Format as plain markdown without headers.`;
+Provide a report in this EXACT format:
+
+**News article title:** [Extract the main news title]
+
+**Summary:** [2-3 sentences analyzing the financial data and news impact on the company's investment potential]
+
+**Final Recommendation:** [Choose one: "Invest - Large Investment" / "Invest - Medium Investment" / "Invest - Small Investment" / "Don't Invest" / "Defer"]
+
+Use plain text formatting, no additional headers or markdown styling.`;
+
   } else {
+    // דוח מפורט - בדיוק כמו בתמונה השנייה
     return `You are an investment analyst. Generate a comprehensive investment report for ${companyName}.
 
 Financial Data (${financials.source.toUpperCase()}):
@@ -148,22 +158,27 @@ Financial Data (${financials.source.toUpperCase()}):
 Recent News:
 ${newsSection}
 
-Create a detailed Markdown report with these sections:
+Create a detailed report with these EXACT sections:
+
 ## Executive Summary
-Brief overview and final recommendation (Invest/Don't Invest/Defer)
+[Brief overview of the company's current position and outlook - 2-3 sentences]
 
 ## Financial Analysis  
-Analysis of the sales and profit figures
+[Detailed analysis of the financial performance, profit margins, and financial health - include specific numbers and calculations]
 
 ## News Analysis
-Summary of recent news and its impact
+[Analysis of recent news and its potential impact on the company's future performance]
 
 ## Investment Recommendation
-Detailed reasoning for the final recommendation
+[Detailed reasoning for the recommendation including risks and opportunities]
 
-Use proper markdown formatting. Be concise but thorough.`;
+**Final Recommendation:** [Choose one: "Invest - Large Investment" / "Invest - Medium Investment" / "Invest - Small Investment" / "Don't Invest" / "Defer"]
+
+Use proper markdown headers (##) for sections and provide comprehensive analysis in each section.`;
   }
 };
+
+
 
 /**
  * Call Gemini LLM API
